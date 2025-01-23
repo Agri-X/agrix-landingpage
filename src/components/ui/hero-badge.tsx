@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 const ease = [0.16, 1, 0.3, 1];
 
-interface HeroBadgeProps {
+interface HeroBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   href?: string;
   text: string;
   icon?: React.ReactNode;
@@ -17,17 +17,17 @@ interface HeroBadgeProps {
   onClick?: () => void;
 }
 
-const badgeVariants: Record<string, string> = {
-  default: "bg-background hover:bg-muted",
-  outline: "border-2 hover:bg-muted",
-  ghost: "hover:bg-muted/50",
+const variants = {
+  default: "bg-primary/5 text-primary border-primary/10",
+  outline: "bg-transparent text-primary border-primary/20",
+  ghost: "bg-transparent text-primary border-transparent",
   custom: "",
 };
 
-const sizeVariants: Record<string, string> = {
-  sm: "px-3 py-1 text-xs gap-1.5",
-  md: "px-4 py-1.5 text-sm gap-2",
-  lg: "px-5 py-2 text-base gap-2.5",
+const sizeVariants = {
+  sm: "text-xs px-2.5 py-0.5",
+  md: "text-sm px-3 py-1",
+  lg: "text-base px-4 py-1.5",
 };
 
 const iconAnimationVariants: Variants = {
@@ -35,7 +35,7 @@ const iconAnimationVariants: Variants = {
   hover: { rotate: -10 },
 };
 
-export default function HeroBadge({
+const HeroBadge = ({
   href,
   text,
   icon,
@@ -44,48 +44,55 @@ export default function HeroBadge({
   size = "md",
   className,
   onClick,
-}: HeroBadgeProps) {
+  ...props
+}: HeroBadgeProps) => {
   const controls = useAnimation();
-
-  const BadgeWrapper = href ? Link : motion.button;
-  const wrapperProps = href ? { href } : { onClick };
 
   const baseClassName = cn(
     "inline-flex items-center rounded-full border transition-colors",
-    badgeVariants[variant],
+    variants[variant],
     sizeVariants[size],
     className
   );
 
-  return (
-    <BadgeWrapper
-      {...wrapperProps}
-      className={cn("group", href && "cursor-pointer")}
+  const content = (
+    <motion.div
+      className="flex items-center gap-1.5"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
     >
-      <motion.div
-        className={baseClassName}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease }}
-        onHoverStart={() => controls.start("hover")}
-        onHoverEnd={() => controls.start("initial")}
-      >
-        {icon && (
-          <motion.div
-            className="text-foreground/60 transition-colors group-hover:text-primary"
-            variants={iconAnimationVariants}
-            initial="initial"
-            animate={controls}
-            transition={{ type: "spring", stiffness: 300, damping: 10 }}
-          >
-            {icon}
-          </motion.div>
-        )}
-        <span>{text}</span>
-        {endIcon && (
-          <motion.div className="text-foreground/60">{endIcon}</motion.div>
-        )}
-      </motion.div>
-    </BadgeWrapper>
+      {icon && (
+        <motion.div
+          className="text-foreground/60 transition-colors group-hover:text-primary"
+          variants={iconAnimationVariants}
+          initial="initial"
+          animate={controls}
+          transition={{ type: "spring", stiffness: 300, damping: 10 }}
+        >
+          {icon}
+        </motion.div>
+      )}
+      <span>{text}</span>
+      {endIcon && (
+        <motion.div className="text-foreground/60">{endIcon}</motion.div>
+      )}
+    </motion.div>
   );
-} 
+
+  if (href) {
+    return (
+      <Link href={href} className={cn("group", href && "cursor-pointer")}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button type="button" className={baseClassName} onClick={onClick}>
+      {content}
+    </button>
+  );
+};
+
+export default HeroBadge; 

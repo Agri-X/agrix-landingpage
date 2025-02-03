@@ -4,8 +4,6 @@ import { motion, useAnimation, type Variants } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-const ease = [0.16, 1, 0.3, 1];
-
 interface HeroBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   href?: string;
   text: string;
@@ -44,7 +42,6 @@ const HeroBadge = ({
   size = "md",
   className,
   onClick,
-  ...props
 }: HeroBadgeProps) => {
   const controls = useAnimation();
 

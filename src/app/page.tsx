@@ -1,7 +1,6 @@
 "use client";
 
 import { Hero } from "@/components/blocks/hero";
-import { Icons } from "@/components/ui/icons";
 import { Feature } from "@/components/ui/feature-with-advantages";
 import { Footerdemo } from "@/components/ui/footer-section";
 

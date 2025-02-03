@@ -1,12 +1,14 @@
 "use client"
 
+import useIsMobile from "@/hooks/useIsMobile";
 import * as React from "react"
 
 function Footerdemo() {
+  const isMobile = useIsMobile();
   return (
     <footer className="relative border-t bg-background text-foreground transition-colors duration-300">
       <div className="container mx-auto px-4 py-12 md:px-6 lg:px-8">
-        <div className="flex justify-center">
+        <div className="flex justify-center" style={isMobile ? { textAlign: 'center' } : {}}>
           <div>
             <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
             <address className="space-y-2 text-sm not-italic">
@@ -17,7 +19,7 @@ function Footerdemo() {
             </address>
           </div>
         </div>
-        <div className="mt-12 flex justify-center border-t pt-8 text-center">
+        <div className="mt-12 mp-24 flex justify-center border-t pt-8 text-center">
           <p className="text-sm text-muted-foreground">
             © 2025 AgriX AI Private Limited. All rights reserved.
           </p>
